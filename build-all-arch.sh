@@ -6,7 +6,7 @@ set -e
 rm -rf prebuilt
 mkdir prebuilt
 
-OPENSSL_VERSION="openssl-1.0.2j"
+OPENSSL_VERSION="openssl-1.0.2o"
 
 curl -O "https://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz"
 tar xfz "${OPENSSL_VERSION}.tar.gz"
