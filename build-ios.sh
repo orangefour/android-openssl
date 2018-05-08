@@ -35,20 +35,20 @@ buildIOS()
 
 	pushd . > /dev/null
 	cd "${OPENSSL_VERSION}"
-  
+
 	if [[ "${ARCH}" == "i386" || "${ARCH}" == "x86_64" ]]; then
 		PLATFORM="iPhoneSimulator"
 	else
 		PLATFORM="iPhoneOS"
 		sed -ie "s!static volatile sig_atomic_t intr_signal;!static volatile intr_signal;!" "crypto/ui/ui_openssl.c"
 	fi
-  
+
 	export $PLATFORM
 	export CROSS_TOP="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
 	export CROSS_SDK="${PLATFORM}${SDK_VERSION}.sdk"
 	export BUILD_TOOLS="${DEVELOPER}"
 	export CC="${BUILD_TOOLS}/usr/bin/gcc -arch ${ARCH}"
-   
+
 	echo "Building ${OPENSSL_VERSION} for ${PLATFORM} ${SDK_VERSION} ${ARCH}"
 
 	if [[ "${ARCH}" == "x86_64" ]]; then
@@ -57,16 +57,16 @@ buildIOS()
 		./Configure iphoneos-cross --openssldir="/tmp/${OPENSSL_VERSION}-iOS-${ARCH}" &> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log"
 	fi
 	# add -isysroot to CC=
-	sed -ie "s!^CFLAG=!CFLAG=-isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -miphoneos-version-min=8.0 !" "Makefile"
+	sed -ie "s!^CFLAG=!CFLAG=-isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -miphoneos-version-min=8.0 -fembed-bitcode !" "Makefile"
 
-	make >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
+	make -j4 >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
 	make install >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
 	make clean >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
 	popd > /dev/null
 }
 
 echo "Cleaning up"
-rm -rf include/openssl/* lib/*
+rm -rf include/openssl/* ios/*
 
 mkdir -p ios
 mkdir -p include/openssl/
