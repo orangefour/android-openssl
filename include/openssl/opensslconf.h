@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 /* OpenSSL was configured with the following options: */
-#ifndef OPENSSL_SYSNAME_iOS
-# define OPENSSL_SYSNAME_iOS
-#endif
 #ifndef OPENSSL_DOING_MAKEDEPEND
 
 
@@ -59,8 +56,11 @@ extern "C" {
 #ifndef OPENSSL_THREADS
 # define OPENSSL_THREADS
 #endif
-#ifndef OPENSSL_NO_DYNAMIC_ENGINE
-# define OPENSSL_NO_DYNAMIC_ENGINE
+#ifndef OPENSSL_NO_ASM
+# define OPENSSL_NO_ASM
+#endif
+#ifndef OPENSSL_NO_STATIC_ENGINE
+# define OPENSSL_NO_STATIC_ENGINE
 #endif
 
 /* The OPENSSL_NO_* macros are also defined as NO_* if the application
@@ -119,8 +119,8 @@ extern "C" {
 
 #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
 #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
-#define ENGINESDIR "/tmp/openssl-1.0.2o-iOS-armv7/lib/engines"
-#define OPENSSLDIR "/tmp/openssl-1.0.2o-iOS-armv7"
+#define ENGINESDIR "/Users/romanp/dev/openssl_for_ios_and_android/tools/libs/armeabi-v7a/lib/engines"
+#define OPENSSLDIR "/Users/romanp/dev/openssl_for_ios_and_android/tools/libs/armeabi-v7a/ssl"
 #endif
 #endif
 
@@ -166,7 +166,7 @@ extern "C" {
 /* If this is set to 'unsigned int' on a DEC Alpha, this gives about a
  * %20 speed up (longs are 8 bytes, int's are 4). */
 #ifndef DES_LONG
-#define DES_LONG unsigned long
+#define DES_LONG unsigned int
 #endif
 #endif
 
