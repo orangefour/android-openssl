@@ -8,7 +8,7 @@
 # https://github.com/x2on/OpenSSL-for-iPhone/blob/master/build-libssl.sh
 
 
-set -e
+set -ex
 
 usage ()
 {
@@ -21,19 +21,19 @@ if [ $1 -e "-h" ]; then
 fi
 
 if [ -z $1 ]; then
-	SDK_VERSION="11.3"
+	SDK_VERSION="12.2"
 else
 	SDK_VERSION=$1
 fi
 
-OPENSSL_VERSION="openssl-1.0.2o"
+OPENSSL_VERSION="openssl-1.0.2s"
 DEVELOPER=`xcode-select -print-path`
 
 buildIOS()
 {
 	ARCH=$1
 
-	pushd . > /dev/null
+	pushd .
 	cd "${OPENSSL_VERSION}"
 
 	if [[ "${ARCH}" == "i386" || "${ARCH}" == "x86_64" ]]; then
@@ -52,17 +52,17 @@ buildIOS()
 	echo "Building ${OPENSSL_VERSION} for ${PLATFORM} ${SDK_VERSION} ${ARCH}"
 
 	if [[ "${ARCH}" == "x86_64" ]]; then
-		./Configure darwin64-x86_64-cc --openssldir="/tmp/${OPENSSL_VERSION}-iOS-${ARCH}" &> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log"
+		./Configure darwin64-x86_64-cc --openssldir="/tmp/${OPENSSL_VERSION}-iOS-${ARCH}"
 	else
-		./Configure iphoneos-cross --openssldir="/tmp/${OPENSSL_VERSION}-iOS-${ARCH}" &> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log"
+		./Configure iphoneos-cross --openssldir="/tmp/${OPENSSL_VERSION}-iOS-${ARCH}"
 	fi
 	# add -isysroot to CC=
 	sed -ie "s!^CFLAG=!CFLAG=-isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -miphoneos-version-min=8.0 -fembed-bitcode !" "Makefile"
 
-	make -j4 >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
-	make install >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
-	make clean >> "/tmp/${OPENSSL_VERSION}-iOS-${ARCH}.log" 2>&1
-	popd > /dev/null
+	make -j4
+	make install
+	make clean
+	popd
 }
 
 echo "Cleaning up"
