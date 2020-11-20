@@ -1,10 +1,12 @@
 INCLUDEPATH += $$PWD/include
 
 android {
-  LIBS += $$PWD/prebuilt/$$ANDROID_TARGET_ARCH/libcrypto.so
-  LIBS += $$PWD/prebuilt/$$ANDROID_TARGET_ARCH/libssl.so
-  ANDROID_EXTRA_LIBS += $$PWD/prebuilt/$$ANDROID_TARGET_ARCH/libcrypto.so
-  ANDROID_EXTRA_LIBS += $$PWD/prebuilt/$$ANDROID_TARGET_ARCH/libssl.so
+
+for(abi, ANDROID_ABIS): ANDROID_EXTRA_LIBS += $$PWD/prebuilt/$${abi}/libcrypto_1_1.so \
+                                              $$PWD/prebuilt/$${abi}/libssl_1_1.so
+
+for(abi, ANDROID_ABIS): LIBS += $$PWD/prebuilt/$${abi}/libcrypto_1_1.so \
+                                $$PWD/prebuilt/$${abi}/libssl_1_1.so
 }
 
 ios {
